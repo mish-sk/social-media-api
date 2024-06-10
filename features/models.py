@@ -21,7 +21,7 @@ class Like(models.Model):
 
 
 class Follow(models.Model):
-    followers = models.ForeignKey(
+    follower = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, related_name="following"
     )
     followed = models.ForeignKey(
