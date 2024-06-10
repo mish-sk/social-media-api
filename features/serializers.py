@@ -27,5 +27,5 @@ class LikeSerializer(serializers.ModelSerializer):
 class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = Follow
-        fields = ["id", "followers", "followed"]
+        fields = ["id", "follower", "followed"]
         read_only_fields = ["id"]
