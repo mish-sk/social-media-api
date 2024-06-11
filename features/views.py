@@ -1,6 +1,8 @@
+from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, viewsets, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from features.models import Post, Comment, Like, Follow
 from features.serializers import (
@@ -83,17 +85,21 @@ class LikeViewSet(
         return super().list(request)
 
 
-class FollowViewSet(
-    mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    viewsets.GenericViewSet,
-):
+class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(follower=self.request.user)
+    def create(self, request, *args, **kwargs):
+        following = request.user
+        followers = get_user_model().objects.get(id=request.data["follower"])
+        if Follow.objects.filter(follower=following, followed=followers).exists():
+            return Response(
+                {"detail": "Already following"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        follow = Follow.objects.create(follower=following, followed=followers)
+        serializer = self.get_serializer(follow)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @extend_schema(
         parameters=[
