@@ -14,14 +14,14 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ["id", "author", "post", "content", "created_at"]
-        read_only_fields = ["id", "author", "post", "created_at"]
+        read_only_fields = ["id", "author"]
 
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = ["id", "user", "post"]
-        read_only_fields = ["id", "user", "post"]
+        read_only_fields = ["id", "user"]
 
 
 class FollowSerializer(serializers.ModelSerializer):
