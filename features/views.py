@@ -21,6 +21,7 @@ class PostViewSet(
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
+    filterset_fields = ["author"]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -28,7 +29,10 @@ class PostViewSet(
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                name="author", description="Filter by author", required=False, type=str
+                name="author",
+                description="Filter by author id",
+                required=False,
+                type=str,
             ),
         ]
     )
@@ -45,6 +49,7 @@ class CommentViewSet(
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated]
+    filterset_fields = ["author"]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -52,7 +57,7 @@ class CommentViewSet(
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                name="author", description="Filter by author", required=False, type=str
+                name="author", description="Filter by author id", required=False, type=str
             ),
         ]
     )
@@ -69,6 +74,7 @@ class LikeViewSet(
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
     permission_classes = [IsAuthenticated]
+    filterset_fields = ["user"]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -76,7 +82,7 @@ class LikeViewSet(
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                name="user", description="Filter by user", required=False, type=str
+                name="user", description="Filter by user id", required=False, type=str
             ),
         ]
     )
@@ -89,6 +95,7 @@ class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
     permission_classes = [IsAuthenticated]
+    filterset_fields = ["follower"]
 
     def create(self, request, *args, **kwargs):
         following = request.user
@@ -105,7 +112,7 @@ class FollowViewSet(viewsets.ModelViewSet):
         parameters=[
             OpenApiParameter(
                 name="follower",
-                description="Filter by follower",
+                description="Filter by follower id",
                 required=False,
                 type=str,
             ),
