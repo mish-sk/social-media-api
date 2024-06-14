@@ -57,7 +57,10 @@ class CommentViewSet(
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                name="author", description="Filter by author id", required=False, type=str
+                name="author",
+                description="Filter by author id",
+                required=False,
+                type=str,
             ),
         ]
     )
